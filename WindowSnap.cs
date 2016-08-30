@@ -117,6 +117,8 @@
 
                                 case WindowState.Maximized:
 
+                                    Unsnap();
+
                                     break;
 
                                 default:
@@ -125,21 +127,11 @@
 
                                     if (DetectSnap.IsSnapped(windowPos, monitorArea))
                                     {
-                                        if (!_snapped)
-                                        {
-                                            _snapped = true;
-
-                                            Snapped(this, new EventArgs());
-                                        }
+                                        Snap();
                                     }
                                     else
                                     {
-                                        if (_snapped)
-                                        {
-                                            _snapped = false;
-
-                                            Unsnapped(this, new EventArgs());
-                                        }
+                                        Unsnap();
                                     }
 
                                     break;
@@ -151,6 +143,26 @@
             }
 
             return IntPtr.Zero;
+        }
+
+        private void Snap()
+        {
+            if (!_snapped)
+            {
+                _snapped = true;
+
+                Snapped(this, new EventArgs());
+            }
+        }
+
+        private void Unsnap()
+        {
+            if (_snapped)
+            {
+                _snapped = false;
+
+                Unsnapped(this, new EventArgs());
+            }
         }
 
         /// <summary>
