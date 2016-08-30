@@ -1,7 +1,10 @@
-# WindowSnap
+
+![WindowSnap][logo] **WindowSnap**
+=======
+
 Sample WPF/C# project to demonstrate detection of a snapped window.
 
-#System-wide behavior settings
+#### **System-wide behavior settings**
  - Window arranging: Enable or disable the simplified move and size behavior of a top-level windows when it is dragged or sized.
  - Snap sizing: Enable or disable windows to be vertically maximized when it is sized to the top or bottom of the monitor. Window arranging must be checked to enable this behavior.
  - Dock moving: Enable or disable window docking when it is moved to the top, left, or right docking targets on a monitor or monitor array. Window arranging must be checked to enable this behavior.
@@ -9,7 +12,7 @@ Sample WPF/C# project to demonstrate detection of a snapped window.
  
 Theses settings affect the snapping behavior for all windows (for testing/demonstration purposes only).
 
-#Remarks
+#### **Remarks**
 
 .NET version 4.5 is the minimum target framework required to properly detect top left/right snap on Windows 10.
 
@@ -21,3 +24,6 @@ Theses settings affect the snapping behavior for all windows (for testing/demons
 
 ----------
 The MIT License (MIT)
+
+
+[logo]: https://github.com/spinico/WindowSnap/blob/master/Images/logo.png?raw=true "WindowSnap"
