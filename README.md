@@ -4,6 +4,8 @@
 
 Sample WPF/C# project to demonstrate detection of a snapped window.
 
+![Sample application preview](https://github.com/spinico/WindowSnap/blob/master/Images/demo.png?raw=true)
+
 #### **System-wide behavior settings**
  - Window arranging: Enable or disable the simplified move and size behavior of a top-level windows when it is dragged or sized.
  - Snap sizing: Enable or disable windows to be vertically maximized when it is sized to the top or bottom of the monitor. Window arranging must be checked to enable this behavior.
