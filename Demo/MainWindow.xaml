@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:Demo"
         mc:Ignorable="d"
-        Title="WindowSnap Demo" Height="325" Width="400"
+        Title="WindowSnap Sample application " Height="325" Width="400"
         Icon="App.ico"
         BorderThickness="1"
         ResizeMode="CanResize"
