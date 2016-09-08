@@ -1,6 +1,7 @@
 ﻿namespace WindowSnap
 {
     using System;
+    using System.Collections.Generic;
     using System.Runtime.InteropServices;
     using System.Windows;
     using System.Windows.Interop;
@@ -12,6 +13,7 @@
         private Window _window = null;
         private IntPtr _hWnd = IntPtr.Zero;
         private bool _snapped = false;
+        private WMSZ _sizingEdge = WMSZ.NONE;
         private Nullable<Size> _offset = null;
 
         private WindowState ActualState
@@ -103,6 +105,18 @@
                         break;
                     }
 
+                case WM.SIZING:
+                    {
+                        _sizingEdge = (WMSZ)wParam.ToInt32();
+                        break;
+                    }
+
+                case WM.EXITSIZEMOVE:
+                    {
+                        _sizingEdge = WMSZ.NONE;
+                        break;
+                    }
+
                 case WM.WINDOWPOSCHANGING:
                     {
                         WINDOWPOS windowPos = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
@@ -123,13 +137,24 @@
 
                                 default:
 
-                                    MonitorArea monitorArea = Helpers.GetMonitorArea(hWnd, new POINT() { x = windowPos.x, y = windowPos.y });
+                                    // Get the list of monitors that intersect with the window area
+                                    List<MonitorArea> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
+                                    {
+                                        left = windowPos.x,
+                                        top = windowPos.y,
+                                        right = windowPos.x + windowPos.cx,
+                                        bottom = windowPos.y + windowPos.cy
+                                    });
 
-                                    if (DetectSnap.IsSnapped(windowPos, monitorArea))
+                                    SnapResult snapResult = DetectSnap.IsSnapped(windowPos, monitors);
+
+                                    if (snapResult.IsSnapped)
                                     {
                                         Snap();
                                     }
-                                    else
+                                    else if (Helpers.IsRestoring(windowPos) ||
+                                             Helpers.SizingTop(_sizingEdge) ||
+                                             Helpers.SizingBottom(_sizingEdge))
                                     {
                                         Unsnap();
                                     }

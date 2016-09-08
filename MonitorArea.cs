@@ -4,7 +4,7 @@
 
     class MonitorArea
     {
-        public struct Region
+        public struct Area
         {
             public int Left;
             public int Right;
@@ -12,29 +12,30 @@
             public int Bottom;
             public int Width;
             public int Height;
+
+            public Area(RECT rc)
+            {
+                Left = rc.left;
+                Top = rc.top;
+                Right = rc.right;
+                Bottom = rc.bottom;
+
+                Width = Math.Abs(rc.right - rc.left);
+                Height = Math.Abs(rc.bottom - rc.top);
+            }
         }
 
-        public Region Work;
-        public Region Display;
-        public RECT Offset;
+        public Area Work { get; }
+        public Area Display { get; }
+        public RECT Offset { get; }
 
         public MonitorArea(RECT display, RECT work)
         {
-            Display.Left = display.left;
-            Display.Right = display.right;
-            Display.Top = display.top;
-            Display.Bottom = display.bottom;
-            Display.Width = Math.Abs(display.right - display.left);
-            Display.Height = Math.Abs(display.bottom - display.top);
+            Display = new Area(display);
 
-            Work.Left = work.left;
-            Work.Right = work.right;
-            Work.Top = work.top;
-            Work.Bottom = work.bottom;
-            Work.Width = Math.Abs(work.right - work.left);
-            Work.Height = Math.Abs(work.bottom - work.top);
+            Work = new Area(work);
 
-            Offset = new RECT()
+            Offset = new RECT
             {
                 left = Math.Abs(work.left - display.left),
                 top = Math.Abs(work.top - display.top),

@@ -2,9 +2,13 @@
 ![WindowSnap][logo] **WindowSnap**
 =======
 
-Sample WPF/C# project to demonstrate detection of a snapped window.
+Sample WPF/C# project to demonstrate detection of a snapped window (AeroSnap).
 
 ![Sample application preview](https://github.com/spinico/WindowSnap/blob/master/Images/demo.png?raw=true)
+
+#### **Update (2016-09-08)**
+
+Fixed multi-monitor issue when a snapped window is moved from one monitor to another.
 
 #### **System-wide snap settings**
  - Window arranging: Enable or disable the simplified move and size behavior of a top-level windows when it is dragged or sized.
