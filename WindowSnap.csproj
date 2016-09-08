@@ -47,6 +47,7 @@
     <Compile Include="Platform\Helpers.cs" />
     <Compile Include="Platform\SafeNativeMethods.cs" />
     <Compile Include="Platform\Structs.cs" />
+    <Compile Include="SnapResult.cs" />
     <Compile Include="SnapSettings.cs" />
     <Compile Include="Platform\UnsafeNativeMethods.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
