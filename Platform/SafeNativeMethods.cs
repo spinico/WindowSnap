@@ -14,9 +14,9 @@
     {
         #region EnumDisplayMonitors
 
-        internal static List<MonitorArea> GetDisplayMonitors(RECT? rc = null)
+        internal static List<Monitor> GetDisplayMonitors(RECT? rc = null)
         {
-            var monitors = new List<MonitorArea>();
+            var monitors = new List<Monitor>();
             IntPtr rcClip = IntPtr.Zero;
 
             if (rc != null)
@@ -29,9 +29,9 @@
             EnumDisplayMonitors(IntPtr.Zero, rcClip,
                 delegate (IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData)
                 {
-                    var monitorArea = GetMonitorArea(hMonitor);
+                    var monitor = GetMonitor(hMonitor);
 
-                    monitors.Add(monitorArea);
+                    monitors.Add(monitor);
 
                     return true;
 
@@ -59,7 +59,7 @@
 
         #region GetMonitorInfo
 
-        static MonitorArea GetMonitorArea(IntPtr hMonitor)
+        static Monitor GetMonitor(IntPtr hMonitor)
         {
             bool success = false;
 
@@ -73,7 +73,7 @@
                 success = GetMonitorInfo(hMonitor, out mi);
             }
 
-            return success ? new MonitorArea(mi.rcMonitor, mi.rcWork) : null;
+            return success ? new Monitor(mi.rcMonitor, mi.rcWork) : null;
         }
 
         /// <devdoc>https://msdn.microsoft.com/en-us/library/windows/desktop/dd144901.aspx</devdoc>

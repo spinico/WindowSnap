@@ -20,7 +20,12 @@
         {
             get { return Helpers.GetActualState(_hWnd); }
         }
-        
+
+        private bool Unsnapping
+        {
+            get { return _snapped && Helpers.SizeRestored(_window); }
+        }
+
         private Size Offset
         {
             get { return _offset != null ? (Size)_offset : NoSize; }
@@ -138,7 +143,7 @@
                                 default:
 
                                     // Get the list of monitors that intersect with the window area
-                                    List<MonitorArea> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
+                                    List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
                                     {
                                         left = windowPos.x,
                                         top = windowPos.y,
@@ -152,9 +157,7 @@
                                     {
                                         Snap();
                                     }
-                                    else if (Helpers.IsRestoring(windowPos) ||
-                                             Helpers.SizingTop(_sizingEdge) ||
-                                             Helpers.SizingBottom(_sizingEdge))
+                                    else if (Unsnapping)
                                     {
                                         Unsnap();
                                     }

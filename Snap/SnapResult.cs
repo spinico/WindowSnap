@@ -4,12 +4,12 @@
     {
         public bool IsSnapped { get; }
 
-        public MonitorArea MonitorArea { get; }
+        public Monitor Monitor { get; }
 
-        public SnapResult(bool isSnapped, MonitorArea monitorArea)
+        public SnapResult(bool isSnapped, Monitor monitor)
         {
             IsSnapped = isSnapped;
-            MonitorArea = monitorArea;
+            Monitor = monitor;
         }
     }
 }
