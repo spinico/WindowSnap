@@ -11,25 +11,17 @@
                    (windowPos.flags & SWP.NOSIZE) != SWP.NOSIZE;
         };
 
-        internal static Func<WINDOWPOS, bool> IsRestoring = (windowPos) =>
+        internal static Func<Window, bool> SizeRestored = (window) =>
         {
-            return (windowPos.flags & SWP.FRAMECHANGED) == SWP.FRAMECHANGED &&
-                   (windowPos.flags & SWP.NOSIZE) != SWP.NOSIZE;
+            return window.Left == window.RestoreBounds.Left &&
+                   window.Top == window.RestoreBounds.Top &&
+                   window.Width == window.RestoreBounds.Width &&
+                   window.Height == window.RestoreBounds.Height;
         };
 
         internal static Func<WINDOWPOS, bool> IsDocked = (windowPos) =>
         {
             return (windowPos.flags & SWP.DOCKFRAME) == SWP.DOCKFRAME;
-        };
-
-        internal static Func<WMSZ, bool> SizingTop = (sizing) =>
-        {
-            return sizing == WMSZ.TOP || sizing == WMSZ.TOPLEFT || sizing == WMSZ.TOPRIGHT;
-        };
-
-        internal static Func<WMSZ, bool> SizingBottom = (sizing) =>
-        {
-            return sizing == WMSZ.BOTTOM || sizing == WMSZ.BOTTOMLEFT || sizing == WMSZ.BOTTOMRIGHT;
         };
 
         internal static WindowState GetActualState(IntPtr hWnd)

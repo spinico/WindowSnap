@@ -2,7 +2,7 @@
 {
     using System;
 
-    class MonitorArea
+    class Monitor
     {
         public struct Area
         {
@@ -29,7 +29,7 @@
         public Area Display { get; }
         public RECT Offset { get; }
 
-        public MonitorArea(RECT display, RECT work)
+        public Monitor(RECT display, RECT work)
         {
             Display = new Area(display);
 
