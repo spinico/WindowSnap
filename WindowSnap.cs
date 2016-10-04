@@ -10,9 +10,13 @@
     {
         private static readonly Size NoSize = new Size(0, 0);
 
+        private Func<bool> CanSnap;
+
         private Window _window = null;
         private IntPtr _hWnd = IntPtr.Zero;
         private bool _snapped = false;
+        private bool _moving = false;
+        private bool _sizing = false;
         private WMSZ _sizingEdge = WMSZ.NONE;
         private Nullable<Size> _offset = null;
 
@@ -49,6 +53,10 @@
             _hWnd = new WindowInteropHelper(window).Handle;
 
             HwndSource.FromHwnd(_hWnd).AddHook(WindowProc);
+
+            CanSnap = () => SnapSettings.WindowArranging &&
+                            ((SnapSettings.DockMoving && _moving) ||
+                             (SnapSettings.SnapSizing && _sizing));
         }
         
         #region IDisposable
@@ -110,6 +118,21 @@
                         break;
                     }
 
+                case WM.SYSCOMMAND:
+                    {
+                        // To obtain the correct result when testing the value of wParam, 
+                        // an application must combine the value 0xFFF0 with the wParam 
+                        // value by using the bitwise AND operator.
+                        SC command = (SC)(wParam.ToInt32() & 0xFFF0);
+
+                        // Detect sizing command: this is also detected on intent 
+                        // of sizing without actually moving an edge of the window
+                        _sizing = command == SC.SIZE;
+                        _moving = command == SC.MOVE;
+
+                        break;
+                    }
+
                 case WM.SIZING:
                     {
                         _sizingEdge = (WMSZ)wParam.ToInt32();
@@ -142,21 +165,30 @@
 
                                 default:
 
-                                    // Get the list of monitors that intersect with the window area
-                                    List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
+                                    // Verify if the current system settings allow snapping
+                                    if (CanSnap())
                                     {
-                                        left = windowPos.x,
-                                        top = windowPos.y,
-                                        right = windowPos.x + windowPos.cx,
-                                        bottom = windowPos.y + windowPos.cy
-                                    });
+                                        // Get the list of monitors that intersect with the window area
+                                        List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
+                                        {
+                                            left = windowPos.x,
+                                            top = windowPos.y,
+                                            right = windowPos.x + windowPos.cx,
+                                            bottom = windowPos.y + windowPos.cy
+                                        });
 
-                                    SnapResult snapResult = DetectSnap.IsSnapped(windowPos, monitors);
+                                        SnapResult snapResult = DetectSnap.IsSnapped(windowPos, monitors);
 
-                                    if (snapResult.IsSnapped)
-                                    {
-                                        Snap();
+                                        if (snapResult.IsSnapped)
+                                        {
+                                            Snap();
+                                        }
+                                        else if (Unsnapping)
+                                        {
+                                            Unsnap();
+                                        }
                                     }
+                                    // Verify for already snapped window
                                     else if (Unsnapping)
                                     {
                                         Unsnap();
