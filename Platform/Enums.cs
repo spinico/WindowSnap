@@ -51,8 +51,16 @@
     {
         SHOWWINDOW        = 0x0018,
         WINDOWPOSCHANGING = 0x0046,
+        SYSCOMMAND        = 0x0112,
         SIZING            = 0x0214,
         EXITSIZEMOVE      = 0x0232
+    }
+
+    [Flags]
+    enum SC : Int32
+    {
+        SIZE = 0xF000,
+        MOVE = 0xF010
     }
 
     enum GWL : Int32
