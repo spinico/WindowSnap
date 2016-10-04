@@ -125,8 +125,6 @@
                         // value by using the bitwise AND operator.
                         SC command = (SC)(wParam.ToInt32() & 0xFFF0);
 
-                        // Detect sizing command: this is also detected on intent 
-                        // of sizing without actually moving an edge of the window
                         _sizing = command == SC.SIZE;
                         _moving = command == SC.MOVE;
 
