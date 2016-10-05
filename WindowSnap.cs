@@ -163,8 +163,9 @@
 
                                 default:
 
-                                    // Verify if the current system settings allow snapping
-                                    if (CanSnap())
+                                    // Proceed to snap detection if the current system settings
+                                    // allow snapping or if window is currently snapped
+                                    if (CanSnap() || _snapped)
                                     {
                                         // Get the list of monitors that intersect with the window area
                                         List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
@@ -185,11 +186,6 @@
                                         {
                                             Unsnap();
                                         }
-                                    }
-                                    // Verify for already snapped window
-                                    else if (Unsnapping)
-                                    {
-                                        Unsnap();
                                     }
 
                                     break;
