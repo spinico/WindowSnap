@@ -55,8 +55,8 @@
             HwndSource.FromHwnd(_hWnd).AddHook(WindowProc);
 
             CanSnap = () => SnapSettings.WindowArranging &&
-                            ((SnapSettings.DockMoving && _moving) ||
-                             (SnapSettings.SnapSizing && _sizing));
+                           (SnapSettings.DockMoving ||
+                            SnapSettings.SnapSizing);
         }
         
         #region IDisposable
