@@ -19,11 +19,6 @@
                    window.Height == window.RestoreBounds.Height;
         };
 
-        internal static Func<WINDOWPOS, bool> IsDocked = (windowPos) =>
-        {
-            return (windowPos.flags & SWP.DOCKFRAME) == SWP.DOCKFRAME;
-        };
-
         internal static WindowState GetActualState(IntPtr hWnd)
         {
             WindowState state = WindowState.Normal;
