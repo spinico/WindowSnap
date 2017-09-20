@@ -51,12 +51,6 @@
         /// <returns>True when window is snapped, false otherwise</returns>
         private static bool IsSnapped(WINDOWPOS windowPos, Monitor monitor)
         {
-            // For Windows 10 and up, check if the docked flag is set
-            if (Helpers.IsDocked(windowPos))
-            {
-                return true;
-            }
-
             // Otherwise, use the standard snap detection            
             SnapBounds bounds = GetBounds(windowPos, monitor);
 

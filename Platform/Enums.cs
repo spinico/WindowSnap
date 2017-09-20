@@ -39,12 +39,14 @@
         /// <summary>
         /// Undocumented flag - Based on the window current position, this 
         /// flag indicates if the window frame will be docked to one or 
-        /// more edges of the monitor
+        /// more edges of the monitor. It does not indicate that the window
+        /// is currently docked (snapped), only that it will be if the
+        /// mouse button (dragging the window) is released.
         /// </summary>
         /// <remarks>
         /// Only available on Windows 10
         /// </remarks>
-        DOCKFRAME    = 0x00100000
+        DOCKFRAME = 0x00100000
     }
 
     enum WM : Int32
