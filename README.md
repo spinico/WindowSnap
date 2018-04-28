@@ -18,6 +18,10 @@ Fixed multi-monitor issue when a snapped window is moved from one monitor to ano
  
 Theses settings affect the snapping behavior for all windows (for testing/demonstration purposes only).
 
+#### **Limitations**
+
+This library does not detect corner (Top/Left, Top/Right, Bottom/Left, Bottom/Right) snaps on Windows 10+.
+
 ----------
 The MIT License (MIT)
 
