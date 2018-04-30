@@ -39,6 +39,7 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Platform\Dpi.cs" />
     <Compile Include="Snap\DetectSnap.cs" />
     <Compile Include="EdgeOffset.cs" />
     <Compile Include="EdgeOffsetChangedEventArgs.cs" />

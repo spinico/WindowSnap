@@ -51,7 +51,7 @@
 
     enum WM : Int32
     {
-        SHOWWINDOW        = 0x0018,
+        ACTIVATE          = 0x0006,         
         WINDOWPOSCHANGING = 0x0046,
         SYSCOMMAND        = 0x0112,
         SIZING            = 0x0214,
@@ -107,5 +107,11 @@
         UPDATEINIFILE    = 0x01,
         SENDCHANGE       = 0x02,
         SENDWININICHANGE = SENDCHANGE
+    }
+
+    enum DEVICECAP : Int32 // Device capabilities
+    {
+        LOGPIXELSX = 88,
+        LOGPIXELSY = 90
     }
 }

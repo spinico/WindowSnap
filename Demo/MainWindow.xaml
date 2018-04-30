@@ -9,8 +9,10 @@
         Icon="App.ico"
         BorderThickness="1"
         ResizeMode="CanResize"
-        WindowStyle="ThreeDBorderWindow"
+        AllowsTransparency="False"
+        WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterScreen"
+        WindowState="Minimized"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"  
         >
 

@@ -6,6 +6,11 @@ Sample WPF/C# project to demonstrate detection of a snapped window (AeroSnap).
 
 ![Sample application preview](https://github.com/spinico/WindowSnap/blob/master/Images/demo.png?raw=true)
 
+
+#### **Update (2018-04-30)**
+
+Added support to detect corner snap on Windows 10+.
+
 #### **Update (2016-09-08)**
 
 Fixed multi-monitor issue when a snapped window is moved from one monitor to another.
@@ -17,10 +22,6 @@ Fixed multi-monitor issue when a snapped window is moved from one monitor to ano
  - Drag from maximize: Enable or disable maximized windows to be restored when its caption bar is dragged. Window arranging must be checked to enable this behavior.
  
 Theses settings affect the snapping behavior for all windows (for testing/demonstration purposes only).
-
-#### **Limitations**
-
-This library does not detect corner (Top/Left, Top/Right, Bottom/Left, Bottom/Right) snaps on Windows 10+.
 
 ----------
 The MIT License (MIT)
