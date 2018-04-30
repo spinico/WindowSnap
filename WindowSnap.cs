@@ -1,5 +1,6 @@
 ﻿namespace WindowSnap
 {
+    using Platform;
     using System;
     using System.Collections.Generic;
     using System.Runtime.InteropServices;
@@ -104,17 +105,21 @@
         {
             switch ((WM)msg)
             {
-                case WM.SHOWWINDOW:
+                case WM.ACTIVATE:
                     {
-                        if (wParam != IntPtr.Zero && _offset == null)
+                        // Initialize offset on window first activation    
+                        // Note: this only applies for non-layered style window
+                        if (!_window.AllowsTransparency &&
+                             _window.WindowStyle != WindowStyle.None &&
+                             _offset == null)
                         {
-                            var edgeOffset = GetEdgeOffset();
+                            var offset = GetEdgeOffset();
 
-                            _offset = edgeOffset.Value;
+                            _offset = offset.Value;
 
-                            EdgeOffsetChanged(this, new EdgeOffsetChangedEventArgs(edgeOffset));
+                            EdgeOffsetChanged(this, new EdgeOffsetChangedEventArgs(offset));
                         }
-                        
+
                         break;
                     }
 
@@ -176,7 +181,13 @@
                                             bottom = windowPos.y + windowPos.cy
                                         });
 
-                                        SnapResult snapResult = DetectSnap.IsSnapped(windowPos, monitors);
+                                        Rect location = new Rect(
+                                            Dpi.ToLogicalX(windowPos.x),
+                                            Dpi.ToLogicalY(windowPos.y),
+                                            Dpi.ToLogicalX(windowPos.cx),
+                                            Dpi.ToLogicalY(windowPos.cy));
+
+                                        SnapResult snapResult = DetectSnap.IsSnapped(ref location, monitors, Offset);
 
                                         if (snapResult.IsSnapped)
                                         {

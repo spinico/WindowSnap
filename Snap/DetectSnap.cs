@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Windows;
 
     [Flags()]
     enum SnapBounds
@@ -18,20 +19,21 @@
         /// <summary>
         /// Indicate if the window is snapped or not (support multi-monitors)
         /// </summary>
-        /// <param name="windowPos"></param>
-        /// <param name="monitors">A list of monitor area</param>        
+        /// <param name="location">The current position and dimension of the window</param>
+        /// <param name="monitors">A list of Monitor instances</param>  
+        /// <param name="offset">The window's border offset</param>
         /// <returns>
         /// A result instance indicating if the window is snapped on one
-        /// of the available monitors and the corresponding monitor
+        /// of the available monitors and the corresponding monitor area
         /// </returns>
-        internal static SnapResult IsSnapped(WINDOWPOS windowPos, List<Monitor> monitors)
+        internal static SnapResult IsSnapped(ref Rect location, List<Monitor> monitors, Size offset)
         {
             bool snapped = false;
             Monitor monitor = monitors[0];
 
             for (int i = 0; i < monitors.Count; i++)
             {
-                snapped = IsSnapped(windowPos, monitors[i]);
+                snapped = IsSnapped(ref location, monitors[i], offset);
 
                 if (snapped)
                 {
@@ -44,22 +46,61 @@
         }
 
         /// <summary>
+        /// Snapped edges detection to support specific scenario on Windows 10 
+        /// </summary>
+        /// <param name="location"></param>
+        /// <param name="monitor"></param>
+        /// <param name="offset"></param>
+        /// <returns>True when window is snapped, false otherwise</returns>
+        private static bool IsSnapped(ref Rect location, Monitor monitor, Size offset)
+        {
+            bool snapped = IsSnapped(ref location, monitor);
+
+            // If not detected, try again with an adjusted window height.
+            // This is required to detect a top corner snap on a border 
+            // styled window (Windows 10+)
+            if (!snapped)
+            {
+                location.Height -= offset.Height;
+
+                snapped = IsSnapped(ref location, monitor);
+            }
+
+            return snapped;
+        }
+
+        /// <summary>
         /// Indicate if the window is snapped or not on the given monitor
         /// </summary>
-        /// <param name="windowPos"></param>
-        /// <param name="monitor"></param>
+        /// <param name="location"></param>
+        /// <param name="monitor"></param>        
         /// <returns>True when window is snapped, false otherwise</returns>
-        private static bool IsSnapped(WINDOWPOS windowPos, Monitor monitor)
+        private static bool IsSnapped(ref Rect location, Monitor monitor)
         {
             // Otherwise, use the standard snap detection            
-            SnapBounds bounds = GetBounds(windowPos, monitor);
+            SnapBounds bounds = GetBounds(ref location, monitor);
+
+            double windowHeight = location.Height;
+            double workHeight = monitor.Work.Height;
+            double displayHeight = monitor.Display.Height;
+
+            // For corner snap, must take possible rounding into account
+            double loHalfWorkHeight = Math.Floor(workHeight / 2.0d);
+            double loHalfDisplayHeight = Math.Floor(displayHeight / 2.0d);
+            double hiHalfWorkHeight = Math.Ceiling(workHeight / 2.0d);
+            double hiHalfDisplayHeight = Math.Ceiling(displayHeight / 2.0d);
 
             // Maximized (top, left, bottom right)            
             // Vertical snap (top, bottom)
             // Vertical left snap (top, bottom, left) 
-            // Vertical right snap (top, bottom, right)             
-            if (windowPos.cy == monitor.Work.Height ||
-                windowPos.cy == monitor.Display.Height)
+            // Vertical right snap (top, bottom, right) 
+            // Corner snap (top left, top right, bottom left, bottom right) 
+            if (windowHeight == workHeight ||
+                windowHeight == displayHeight ||
+                windowHeight == loHalfWorkHeight ||
+                windowHeight == loHalfDisplayHeight ||
+                windowHeight == hiHalfWorkHeight ||
+                windowHeight == hiHalfDisplayHeight)
             {
                 return bounds != SnapBounds.None;
             }
@@ -70,35 +111,45 @@
         /// <summary>
         /// Obtain the corresponding snapped bounds of the window
         /// </summary>
-        /// <param name="windowPos"></param>
+        /// <param name="location"></param>
         /// <param name="monitor"></param>
         /// <returns>The snapped bounds</returns>
-        private static SnapBounds GetBounds(WINDOWPOS windowPos, Monitor monitor)
+        private static SnapBounds GetBounds(ref Rect location, Monitor monitor)
         {
             SnapBounds bounds = SnapBounds.None;
 
             Monitor.Area work = monitor.Work;
+            Monitor.Area display = monitor.Display;
 
-            // LEFT
-            if (windowPos.x == work.Left)
-            {
-                bounds |= SnapBounds.Left;
-            }
+            double left = location.Left;
+            double top = location.Top;
+            double right = location.Right;
+            double bottom = location.Bottom;
 
             // TOP
-            if (windowPos.y == work.Top)
+            if (top == work.Top ||
+                top == display.Top)
             {
                 bounds |= SnapBounds.Top;
             }
 
+            // LEFT
+            if (left == work.Left ||
+                left == display.Left)
+            {
+                bounds |= SnapBounds.Left;
+            }
+
             // RIGHT
-            if (windowPos.x + windowPos.cx == work.Left + work.Width)
+            if (right == work.Right ||
+                right == display.Right)
             {
                 bounds |= SnapBounds.Right;
             }
 
             // BOTTOM
-            if (windowPos.y + windowPos.cy == work.Top + work.Height)
+            if (bottom == work.Bottom ||
+                bottom == display.Bottom)
             {
                 bounds |= SnapBounds.Bottom;
             }
