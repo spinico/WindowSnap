@@ -12,7 +12,7 @@
         AllowsTransparency="False"
         WindowStyle="SingleBorderWindow"
         WindowStartupLocation="CenterScreen"
-        WindowState="Minimized"
+        WindowState="Normal"
         DataContext="{Binding RelativeSource={RelativeSource Mode=Self}}"  
         >
 
