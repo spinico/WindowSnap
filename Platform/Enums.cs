@@ -34,19 +34,7 @@
         NOSIZE       = 0x00000001,
         NOMOVE       = 0x00000002,
         NOZORDER     = 0x00000004,
-        FRAMECHANGED = 0x00000020,
-
-        /// <summary>
-        /// Undocumented flag - Based on the window current position, this 
-        /// flag indicates if the window frame will be docked to one or 
-        /// more edges of the monitor. It does not indicate that the window
-        /// is currently docked (snapped), only that it will be if the
-        /// mouse button (dragging the window) is released.
-        /// </summary>
-        /// <remarks>
-        /// Only available on Windows 10
-        /// </remarks>
-        DOCKFRAME = 0x00100000
+        FRAMECHANGED = 0x00000020
     }
 
     enum WM : Int32
@@ -74,10 +62,10 @@
     [Flags()]
     enum WS : UInt32
     {
-        SIZEBOX  = 0x00040000,
-        BORDER   = 0x00800000,
-        MINIMIZE = 0x20000000,
-        MAXIMIZE = 0x01000000        
+        THICKFRAME  = 0x00040000,
+        BORDER      = 0x00800000,
+        MINIMIZE    = 0x20000000,
+        MAXIMIZE    = 0x01000000        
     }
 
     [Flags()]
@@ -109,7 +97,7 @@
         SENDWININICHANGE = SENDCHANGE
     }
 
-    enum DEVICECAP : Int32 // Device capabilities
+    enum DEVICECAP : Int32
     {
         LOGPIXELSX = 88,
         LOGPIXELSY = 90

@@ -39,5 +39,4 @@
         public RECT rcWork;
         public MONITORINFOF dwFlags;
     }
-
 }

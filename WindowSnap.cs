@@ -235,9 +235,9 @@
         /// based on the current type of window
         /// </summary>
         /// <remarks>
-        /// ThreeDBorderWindow : WINDOWEDGE + CLIENTEDGE + SIZEBOX
-        /// SingleBorderWindow : WINDOWEDGE + SIZEBOX
-        /// ToolWindow         : WINDOWEDGE + TOOLWINDOW + SIZEBOX
+        /// ThreeDBorderWindow : WINDOWEDGE + CLIENTEDGE + THICKFRAME
+        /// SingleBorderWindow : WINDOWEDGE + THICKFRAME
+        /// ToolWindow         : WINDOWEDGE + TOOLWINDOW + THICKFRAME
         /// </remarks>
         /// <returns>The width and height offset</returns>
         private EdgeOffset GetEdgeOffset()
@@ -274,7 +274,7 @@
                 };
             }
 
-            if ((ws & WS.SIZEBOX) == WS.SIZEBOX)
+            if ((ws & WS.THICKFRAME) == WS.THICKFRAME)
             {
                 edgeOffset.ResizeFrame = new Size()
                 {
