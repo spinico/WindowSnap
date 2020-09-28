@@ -40,7 +40,7 @@
     enum WM : Int32
     {
         ACTIVATE          = 0x0006,         
-        WINDOWPOSCHANGING = 0x0046,
+        WINDOWPOSCHANGED  = 0x0047,
         SYSCOMMAND        = 0x0112,
         SIZING            = 0x0214,
         EXITSIZEMOVE      = 0x0232
