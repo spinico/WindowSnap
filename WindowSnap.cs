@@ -148,7 +148,7 @@
                         break;
                     }
 
-                case WM.WINDOWPOSCHANGING:
+                case WM.WINDOWPOSCHANGED:
                     {
                         WINDOWPOS windowPos = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
 
@@ -173,6 +173,13 @@
                                     if (CanSnap() || _snapped)
                                     {
                                         // Get the list of monitors that intersect with the window area
+                                        //
+                                        // IMPORTANT: To properly detect the monitors list, this call should
+                                        // be made within the WM_WINDOWPOSCHANGED event. If called in the earlier 
+                                        // WM_WINDOWPOSCHANGING event, the method can return an empty monitors 
+                                        // list if the clipping rectangle is set outside the visible region.
+                                        // This issue can occur when quickly dragging a window to be snapped
+                                        // to a monitor's edges.
                                         List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
                                         {
                                             left = windowPos.x,
