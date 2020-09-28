@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Windows;
 
@@ -27,7 +28,9 @@
                 Marshal.StructureToPtr(rc, rcClip, true);
             }
 
-            EnumDisplayMonitors(IntPtr.Zero, rcClip,
+            // The MonitorEnumProc delegate will not be called if the clipping rectangle (rcClip) is
+            // set to be outside of a visible region: the monitors list will remains empty.
+            bool result = EnumDisplayMonitors(IntPtr.Zero, rcClip,
                 delegate (IntPtr hMonitor, IntPtr hdcMonitor, ref RECT lprcMonitor, IntPtr dwData)
                 {
                     var monitor = GetMonitor(hMonitor);
@@ -38,12 +41,11 @@
 
                 }, IntPtr.Zero);
 
-
             if (rcClip != IntPtr.Zero)
             {
                 Marshal.FreeHGlobal(rcClip);
                 rcClip = IntPtr.Zero;
-            }
+            }        
 
             return monitors;
         }
