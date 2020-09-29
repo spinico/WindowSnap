@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Diagnostics;
     using System.Runtime.InteropServices;
     using System.Windows;
 
@@ -45,7 +44,7 @@
             {
                 Marshal.FreeHGlobal(rcClip);
                 rcClip = IntPtr.Zero;
-            }        
+            }
 
             return monitors;
         }

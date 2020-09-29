@@ -148,7 +148,13 @@
                         break;
                     }
 
-                case WM.WINDOWPOSCHANGED:
+                // Unsnap must be detected on a WM_WINDOWPOSCHANGING event
+                //
+                // Note: previous version would also try to detect snapped state in the WM_WINDOWPOSCHANGING
+                // message event, but if the snapping was done using a quick window drag motion to the edge, this
+                // would cause the window coordinates to be set to an invalid size (cx = cy = 0) which failed to
+                // set the monitors list (returned an empty list).
+                case WM.WINDOWPOSCHANGING:
                     {
                         WINDOWPOS windowPos = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
 
@@ -157,59 +163,58 @@
                             switch (ActualState)
                             {
                                 case WindowState.Minimized:
-
                                     break;
 
                                 case WindowState.Maximized:
-
                                     Unsnap();
-
                                     break;
 
-                                default:
-
-                                    // Proceed to snap detection if the current system settings
-                                    // allow snapping or if window is currently snapped
-                                    if (CanSnap() || _snapped)
+                                default:                                    
+                                    if (_snapped && Unsnapping)
                                     {
-                                        // Get the list of monitors that intersect with the window area
-                                        //
-                                        // IMPORTANT: To properly detect the monitors list, this call should
-                                        // be made within the WM_WINDOWPOSCHANGED event. If called in the earlier 
-                                        // WM_WINDOWPOSCHANGING event, the method can return an empty monitors 
-                                        // list if the clipping rectangle is set outside the visible region.
-                                        // This issue can occur when quickly dragging a window to be snapped
-                                        // to a monitor's edges.
-                                        List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
-                                        {
-                                            left = windowPos.x,
-                                            top = windowPos.y,
-                                            right = windowPos.x + windowPos.cx,
-                                            bottom = windowPos.y + windowPos.cy
-                                        });
-
-                                        Rect location = new Rect(
-                                            Dpi.ToLogicalX(windowPos.x),
-                                            Dpi.ToLogicalY(windowPos.y),
-                                            Dpi.ToLogicalX(windowPos.cx),
-                                            Dpi.ToLogicalY(windowPos.cy));
-
-                                        SnapResult snapResult = DetectSnap.IsSnapped(ref location, monitors, Offset);
-
-                                        if (snapResult.IsSnapped)
-                                        {
-                                            Snap();
-                                        }
-                                        else if (Unsnapping)
-                                        {
-                                            Unsnap();
-                                        }
+                                        Unsnap();                                        
                                     }
-
                                     break;
                             }                            
                         }
 
+                        break;
+                    }
+
+                // Snap must be detected on a WM_WINDOWPOSCHANGED event to detect monitors list reliably
+                case WM.WINDOWPOSCHANGED:
+                    {
+                        WINDOWPOS windowPos = (WINDOWPOS)Marshal.PtrToStructure(lParam, typeof(WINDOWPOS));
+
+                        if (Helpers.WindowChanged(windowPos))
+                        {
+                            // Proceed to snap detection if the current system settings allow it 
+                            if (CanSnap())
+                            {
+                                // Get the list of monitors that intersect with the window area                                        
+                                List<Monitor> monitors = SafeNativeMethods.GetDisplayMonitors(new RECT
+                                {
+                                    left = windowPos.x,
+                                    top = windowPos.y,
+                                    right = windowPos.x + windowPos.cx,
+                                    bottom = windowPos.y + windowPos.cy
+                                });
+
+                                Rect location = new Rect(
+                                    Dpi.ToLogicalX(windowPos.x),
+                                    Dpi.ToLogicalY(windowPos.y),
+                                    Dpi.ToLogicalX(windowPos.cx),
+                                    Dpi.ToLogicalY(windowPos.cy));
+
+                                SnapResult snapResult = DetectSnap.IsSnapped(ref location, monitors, Offset);
+
+                                if (snapResult.IsSnapped)
+                                {
+                                    Snap();
+                                }
+                            }
+                        }
+                        
                         break;
                     }
             }

@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Windows;
 
     [Flags()]
@@ -18,7 +19,7 @@
     {
         /// <summary>
         /// Indicate if the window is snapped or not (support multi-monitors)
-        /// </summary>        
+        /// </summary>
         /// <param name="location">The current position and dimension of the window</param>
         /// <param name="monitors">A list of Monitor instances</param>  
         /// <param name="offset">The window's border offset</param>
@@ -28,8 +29,8 @@
         /// </returns>
         internal static SnapResult IsSnapped(ref Rect location, List<Monitor> monitors, Size offset)
         {
-            bool snapped = false;
-            Monitor monitor = null;
+            bool snapped = false;            
+            Monitor monitor = monitors[0];
 
             for (int i = 0; i < monitors.Count; i++)
             {
@@ -40,7 +41,7 @@
                     monitor = monitors[i];
                     break;
                 }
-            }
+            }           
 
             return new SnapResult(snapped, monitor);
         }
