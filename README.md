@@ -7,7 +7,7 @@ Sample WPF/C# project to demonstrate detection of a snapped window (AeroSnap).
 ![Sample application preview](https://github.com/spinico/WindowSnap/blob/master/Images/demo.png?raw=true)
 
 
-#### **Update (2020-09-29)**
+#### **Update (2020-09-30)**
 
 Fixed an issue to properly detect a snapped window state when a window is quickly dragged to a monitor's edges.
 
