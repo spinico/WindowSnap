@@ -13,6 +13,11 @@
     /// <devdoc>http://msdn.microsoft.com/en-us/library/btadwd4w(vs.80).aspx</devdoc>    
     internal static class SafeNativeMethods
     {
+        /// <devdoc>http://msdn.microsoft.com/en-us/library/windows/desktop/ms633519.aspx</devdoc>
+        [DllImport("user32.dll", SetLastError = true)]
+        [return: MarshalAs(UnmanagedType.Bool)]
+        internal static extern bool GetWindowRect([In] IntPtr hWnd, [Out] out RECT lpRect);
+
         #region EnumDisplayMonitors
 
         internal static List<Monitor> GetDisplayMonitors(RECT? rc = null)
